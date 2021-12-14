@@ -214,7 +214,7 @@ function parseImageName() {
     # - tag
     # If a group is missing it will be an empty string
     if [[ "x$TAGONLY" == "x" ]]; then
-       imageRegex="^([a-zA-Z0-9\.\-]+):?([0-9]+)?/([a-zA-Z0-9\._\-]+)(/[\/a-zA-Z0-9\._\-]+)?:?([a-zA-Z0-9\._\-]+)?$"
+       imageRegex="^([a-zA-Z0-9\.\-]+):?([0-9]+)?/([a-zA-Z0-9\._\-]+)(/[\/a-zA-Z0-9\._\-]+)?:?((@sha256:)?[a-zA-Z0-9\._\-]+)?$"
     else
        imageRegex="^:?([a-zA-Z0-9\._-]+)?$"
     fi
@@ -306,7 +306,11 @@ function parseImageName() {
       fi
       imageWithoutTag="$useImage"
       if [[ ! -z "$tag" ]]; then
-        useImage="$useImage:$tag"
+        if [[ "$tag" = @sha256:* ]]; then
+          useImage="$useImage$tag"
+        else
+          useImage="$useImage:$tag"
+        fi
       fi
 
     else
